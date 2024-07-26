@@ -5,6 +5,7 @@ const path = require("path");
 const db = require("./db");
 const StaffRouter = require("./routes/staffRouter");
 const BranchRouter = require("./routes/branchRouter");
+const ClientRouter = require("./routes/clientRouter");
 const cors = require("cors");
 
 const upload = multer({ dest: "uploads/" });
@@ -36,6 +37,7 @@ class App {
   initializeRoutes() {
     this.app.use("/api/staffs", StaffRouter);
     this.app.use("/api/branches", BranchRouter);
+    this.app.use("/api/clients", ClientRouter);
   }
 
   initializeErrorHandling() {
