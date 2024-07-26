@@ -1,0 +1,38 @@
+.findBranchContainer {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Align items towards the top */
+  height: 80vh; /* Slightly less than full viewport height to position higher */
+  padding-top: 5vh; /* Add padding to position the form lower */
+}
+
+.findBranch {
+  display: flex;
+  align-items: center; /* Align items side by side */
+}
+
+.findBranch input,
+.findBranch button {
+  font: inherit;
+  padding: 0.75rem 2.25rem; /* Increased padding to make the input and button larger */
+  font-size: 1.5rem; /* Increased font size */
+  border-radius: 0;
+  border: none;
+}
+
+.findBranch input {
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+
+.findBranch button {
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+  cursor: pointer;
+  margin: 30px;
+}
+
+.findBranch button:hover {
+  background-color: var(--color-primary-300);
+  color: var(--color-gray-800);
+}

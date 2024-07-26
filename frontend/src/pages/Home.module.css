@@ -1,0 +1,32 @@
+.homePage {
+  margin: 2rem auto;
+  max-width: 40rem;
+  text-align: center;
+}
+
+.homePage h1 {
+  color: var(--color-primary-900); /* Using a dark shade for the heading */
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+}
+
+.card {
+  background-color: var(--color-gray-800);
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  color: var(
+    --color-gray-100
+  ); /* Text color matches with the card background */
+}
+
+.description {
+  margin-bottom: 1.5rem;
+  color: var(--color-gray-300); /* Lighter gray for description text */
+}
+
+.cta {
+  font-size: 1.1rem;
+  color: var(--color-gray-200); /* Slightly lighter gray for the CTA */
+  font-weight: 600;
+}
