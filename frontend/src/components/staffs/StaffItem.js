@@ -14,17 +14,17 @@ function StaffItem({ staff }) {
   }
 
   // Log the image URL for debugging
-  console.log(`Staff Image URL: ${config.SERVER_URL}${staff.image}`);
+  // console.log(`Staff Image URL: ${config.SERVER_URL}${staff.image}`);
   console.log(staff); // Log the whole staff object for further debugging
 
   return (
     <article className={classes.staff}>
-      {staff.image && (
+      {/* {staff.image && (
         <img
           src={`${config.SERVER_URL}${staff.image}`}
           alt={`${staff.fname} ${staff.lname}`}
         />
-      )}
+      )} */}
       <h1>
         {staff.fname} {staff.lname}
       </h1>

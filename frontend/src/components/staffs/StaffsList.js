@@ -4,8 +4,9 @@ import classes from "./StaffsList.module.css";
 
 function StaffsList({ staffs }) {
   // Ensure staffs is an array before using .map()
-  if (!Array.isArray(staffs)) {
-    return <p>No staff members found.</p>; // or handle loading state
+
+  if (!Array.isArray(staffs) || staffs.length === 0) {
+    return null; // Render nothing if no branches found
   }
 
   return (

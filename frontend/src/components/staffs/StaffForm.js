@@ -1,33 +1,21 @@
 import React from "react";
 import { Form, json, redirect, useNavigate } from "react-router-dom";
 import classes from "./StaffForm.module.css";
-import config from "../../config/config";
 
-function StaffForm({ method, staff }) {
+function StaffForm({ staff, method }) {
   const navigate = useNavigate();
+  const isEditing = method === "PATCH";
+
+  // Debugging: Log the staff prop to ensure it's received correctly
+  console.log("Staff data:", staff);
 
   async function handleSubmit(event) {
     event.preventDefault();
     const formData = new FormData(event.target);
 
-    // Prepare data for submission
-    const staffData = {
-      staffno: formData.get("staffno"),
-      fname: formData.get("fname"),
-      lname: formData.get("lname"),
-      position: formData.get("position"),
-      sex: formData.get("sex"),
-      dob: formData.get("dob"),
-      salary: formData.get("salary"),
-      branchno: formData.get("branchno"),
-      telephone: formData.get("telephone"),
-      mobile: formData.get("mobile"),
-      email: formData.get("email"),
-    };
-
     let url = "http://localhost:8000/api/staffs";
     if (method === "PATCH") {
-      url += `/${staffData.staffno}`;
+      url += `/${staff.staffno}`; // Use staff.staffno directly for PATCH requests
     }
 
     try {
@@ -38,8 +26,7 @@ function StaffForm({ method, staff }) {
 
       if (response.status === 422) {
         const data = await response.json();
-        // Handle validation errors
-        console.error(data.errors);
+        console.error(data.errors); // Handle validation errors
         return;
       }
 
@@ -62,7 +49,8 @@ function StaffForm({ method, staff }) {
           type="text"
           name="staffno"
           required
-          defaultValue={staff && staff.staffno}
+          defaultValue={staff?.staffno || ""}
+          readOnly={isEditing} // Make the input field read-only only for PATCH requests
         />
       </p>
       <p>
@@ -72,7 +60,7 @@ function StaffForm({ method, staff }) {
           type="text"
           name="fname"
           required
-          defaultValue={staff && staff.fname}
+          defaultValue={staff?.fname || ""}
         />
       </p>
       <p>
@@ -82,7 +70,7 @@ function StaffForm({ method, staff }) {
           type="text"
           name="lname"
           required
-          defaultValue={staff && staff.lname}
+          defaultValue={staff?.lname || ""}
         />
       </p>
       <p>
@@ -92,7 +80,7 @@ function StaffForm({ method, staff }) {
           type="text"
           name="position"
           required
-          defaultValue={staff && staff.position}
+          defaultValue={staff?.position || ""}
         />
       </p>
       <p>
@@ -102,7 +90,7 @@ function StaffForm({ method, staff }) {
           type="text"
           name="sex"
           required
-          defaultValue={staff && staff.sex}
+          defaultValue={staff?.sex || ""}
         />
       </p>
       <p>
@@ -112,7 +100,9 @@ function StaffForm({ method, staff }) {
           type="date"
           name="dob"
           required
-          defaultValue={staff && staff.dob}
+          defaultValue={
+            staff?.dob ? new Date(staff.dob).toISOString().split("T")[0] : ""
+          }
         />
       </p>
       <p>
@@ -123,7 +113,7 @@ function StaffForm({ method, staff }) {
           name="salary"
           step="0.01"
           required
-          defaultValue={staff && staff.salary}
+          defaultValue={staff?.salary || ""}
         />
       </p>
       <p>
@@ -133,27 +123,27 @@ function StaffForm({ method, staff }) {
           type="text"
           name="branchno"
           required
-          defaultValue={staff && staff.branchno}
+          defaultValue={staff?.branchno || ""}
         />
       </p>
       <p>
-        <label htmlFor="telephone">Telephone</label>
+        <label htmlFor="telephone">Telephone Number</label>
         <input
           id="telephone"
           type="text"
           name="telephone"
           required
-          defaultValue={staff && staff.telephone}
+          defaultValue={staff?.telephone || ""}
         />
       </p>
       <p>
-        <label htmlFor="mobile">Mobile</label>
+        <label htmlFor="mobile">Mobile Number</label>
         <input
           id="mobile"
           type="text"
           name="mobile"
           required
-          defaultValue={staff && staff.mobile}
+          defaultValue={staff?.mobile || ""}
         />
       </p>
       <p>
@@ -163,14 +153,25 @@ function StaffForm({ method, staff }) {
           type="email"
           name="email"
           required
-          defaultValue={staff && staff.email}
+          defaultValue={staff?.email || ""}
         />
       </p>
+      {/* <p>
+        <label htmlFor="image">Image URL</label>
+        <input
+          id="image"
+          type="text"
+          name="image"
+          defaultValue={staff?.image || ""}
+        />
+      </p> */}
       <div className={classes.actions}>
         <button type="button" onClick={() => navigate("..")}>
           Cancel
         </button>
-        <button type="submit">Save</button>
+        <button type="submit">
+          {method === "PATCH" ? "Update Staff" : "Create Staff"}
+        </button>
       </div>
     </Form>
   );

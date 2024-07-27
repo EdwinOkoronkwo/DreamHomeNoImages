@@ -99,6 +99,10 @@ import classes from "./BranchForm.module.css";
 
 // export default BranchForm;
 
+// import React from "react";
+// import { Form, useNavigate } from "react-router-dom";
+// import classes from "./BranchForm.module.css"; // Ensure the correct path to the CSS module
+
 function BranchForm({ branch, method }) {
   const navigate = useNavigate();
   const isEditing = method === "PATCH";
@@ -107,17 +111,9 @@ function BranchForm({ branch, method }) {
     event.preventDefault();
     const formData = new FormData(event.target);
 
-    // Prepare data for submission
-    const branchData = {
-      branchno: formData.get("branchno"),
-      street: formData.get("street"),
-      city: formData.get("city"),
-      postcode: formData.get("postcode"),
-    };
-
     let url = "http://localhost:8000/api/branches";
     if (method === "PATCH") {
-      url += `/${branchData.branchno}`;
+      url += `/${formData.get("branchno")}`; // Use branchno from formData for PATCH requests
     }
 
     try {
@@ -128,8 +124,7 @@ function BranchForm({ branch, method }) {
 
       if (response.status === 422) {
         const data = await response.json();
-        // Handle validation errors
-        console.error(data.errors);
+        console.error(data.errors); // Handle validation errors
         return;
       }
 
@@ -144,7 +139,7 @@ function BranchForm({ branch, method }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className={classes.form}>
+    <Form method={method} className={classes.form} onSubmit={handleSubmit}>
       <div>
         <label htmlFor="branchno">Branch Number</label>
         <input
@@ -152,7 +147,7 @@ function BranchForm({ branch, method }) {
           id="branchno"
           name="branchno"
           defaultValue={branch ? branch.branchno : ""}
-          readOnly={isEditing} // Make it read-only during editing
+          readOnly={isEditing} // Make the input field read-only during editing
         />
       </div>
       <div>
@@ -183,11 +178,14 @@ function BranchForm({ branch, method }) {
         />
       </div>
       <div className={classes.actions}>
+        <button type="button" onClick={() => navigate("..")}>
+          Cancel
+        </button>
         <button type="submit">
           {isEditing ? "Update Branch" : "Create Branch"}
         </button>
       </div>
-    </form>
+    </Form>
   );
 }
 

@@ -2,8 +2,9 @@ import { Link } from "react-router-dom";
 import classes from "./BranchesList.module.css";
 
 function BranchesList({ branches }) {
-  if (!Array.isArray(branches)) {
-    return <p>No branches found.</p>; // or handle loading state
+  // Check if branches is valid and not empty
+  if (!Array.isArray(branches) || branches.length === 0) {
+    return null; // Render nothing if no branches found
   }
 
   return (

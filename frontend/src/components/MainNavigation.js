@@ -40,6 +40,16 @@ function MainNavigation() {
           </li>
           <li>
             <NavLink
+              to="/clients"
+              className={({ isActive }) =>
+                isActive ? classes.active : undefined
+              }
+            >
+              Clients
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
               to="/findBranch"
               className={({ isActive }) =>
                 isActive ? classes.active : undefined

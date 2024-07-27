@@ -12,7 +12,7 @@ import BranchesRootLayout from "./pages/branches/BranchesRoot";
 import HomePage from "./pages/Home";
 import NewBranchPage from "./pages/branches/NewBranch";
 import RootLayout from "./pages/Root";
-//import { action as manipulateBranchAction } from "./components/branches/BranchForm";
+// import { action as manipulateBranchAction } from "./components/branches/BranchForm";
 import NewsletterPage, { action as newsletterAction } from "./pages/Newsletter";
 import EditStaffPage from "./pages/staffs/EditStaff";
 import StaffDetailPage, {
@@ -24,6 +24,16 @@ import StaffsRootLayout from "./pages/staffs/StaffRoot";
 import NewStaffPage from "./pages/staffs/NewStaff";
 import { action as manipulateStaffAction } from "./components/staffs/StaffForm";
 import FindBranchItem from "./components/FindBranchItem";
+// Import client-related components
+import EditClientPage from "./pages/clients/EditClient";
+import ClientDetailPage, {
+  loader as clientDetailLoader,
+  action as deleteClientAction,
+} from "./pages/clients/ClientDetail";
+import ClientsPage, { loader as clientsLoader } from "./pages/clients/Clients";
+import ClientsRootLayout from "./pages/clients/ClientsRoot";
+import NewClientPage from "./pages/clients/NewClient";
+import { action as manipulateClientAction } from "./components/clients/ClientForm";
 
 const router = createBrowserRouter([
   {
@@ -54,14 +64,12 @@ const router = createBrowserRouter([
               {
                 path: "edit",
                 element: <EditBranchPage />,
-                //   action: manipulateBranchAction,
               },
             ],
           },
           {
             path: "new",
             element: <NewBranchPage />,
-            // action: manipulateBranchAction,
           },
         ],
       },
@@ -94,14 +102,44 @@ const router = createBrowserRouter([
           {
             path: "new",
             element: <NewStaffPage />,
-            //action: manipulateStaffAction,
+          },
+        ],
+      },
+      {
+        path: "clients",
+        element: <ClientsRootLayout />,
+        children: [
+          {
+            index: true,
+            element: <ClientsPage />,
+            loader: clientsLoader,
+          },
+          {
+            path: ":clientno",
+            id: "client-detail",
+            loader: clientDetailLoader,
+            children: [
+              {
+                index: true,
+                element: <ClientDetailPage />,
+                action: deleteClientAction,
+              },
+              {
+                path: "edit",
+                element: <EditClientPage />,
+                action: manipulateClientAction,
+              },
+            ],
+          },
+          {
+            path: "new",
+            element: <NewClientPage />,
           },
         ],
       },
       {
         path: "findBranch",
         element: <FindBranchItem />,
-        //action: newsletterAction,
       },
     ],
   },
@@ -112,3 +150,15 @@ function App() {
 }
 
 export default App;
+
+// {
+//   path: "clients",
+//   element: <ClientsPage />,
+//   loader: clientsLoader,
+// },
+// {
+//   path: "clients/:clientno",
+//   element: <ClientDetailPage />,
+//   loader: clientDetailLoader,
+//   action: clientDetailAction,
+// },
