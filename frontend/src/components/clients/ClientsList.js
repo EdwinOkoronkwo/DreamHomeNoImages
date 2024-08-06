@@ -3,8 +3,6 @@ import { Link } from "react-router-dom";
 import classes from "./ClientsList.module.css";
 
 function ClientsList({ clients }) {
-  console.log("ClientsList received clients data:", clients);
-
   if (!Array.isArray(clients)) {
     if (!Array.isArray(clients) || clients.length === 0) {
       return null; // Render nothing if no branches found

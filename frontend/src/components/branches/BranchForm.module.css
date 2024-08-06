@@ -14,12 +14,14 @@
 .form textarea {
   font: inherit;
   padding: 0.25rem;
+  margin-bottom: 10px;
 }
 
 .actions {
   display: flex;
   gap: 1rem;
   justify-content: flex-end;
+  margin-top: 20px;
 }
 
 .actions button {
@@ -48,4 +50,10 @@
 input[readonly] {
   background-color: #727272; /* Light grey background for read-only fields */
   cursor: not-allowed; /* Show not-allowed cursor */
+}
+/* BranchForm.module.css */
+.error {
+  color: red;
+  margin-top: 5px;
+  font-size: 0.9em;
 }

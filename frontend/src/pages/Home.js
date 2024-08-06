@@ -4,10 +4,10 @@ import styles from "./Home.module.css";
 function HomePage() {
   return (
     <div className={styles.homePage}>
-      <h1>Welcome to DreamHome Esates!</h1>
+      <h1>Welcome to DreamHome Estate!</h1>
       <div className={styles.card}>
         <p className={styles.description}>
-          Discover your dream home with Sunny Estates. Our premium estate offers
+          Discover your dream home with Sunny estates. Our premium estate offers
           beautiful homes with modern amenities in a serene environment. Whether
           you’re looking for a cozy apartment or a spacious family home, we have
           a variety of options to suit your needs.

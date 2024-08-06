@@ -1,8 +1,8 @@
 const ClientService = require("../services/client.service");
 const { isValidText, isValidEmail } = require("../util/validation");
 
-const ClientController = {
-  async getAllClients(req, res, next) {
+class ClientController {
+  static async getAllClients(req, res, next) {
     try {
       let clients = await ClientService.getAllClients();
 
@@ -25,9 +25,9 @@ const ClientController = {
     } catch (error) {
       next(error);
     }
-  },
+  }
 
-  async getClientById(req, res, next) {
+  static async getClientById(req, res, next) {
     const { clientno } = req.params;
     try {
       const client = await ClientService.getClientById(clientno);
@@ -38,9 +38,9 @@ const ClientController = {
     } catch (error) {
       next(error);
     }
-  },
+  }
 
-  async deleteClient(req, res, next) {
+  static async deleteClient(req, res, next) {
     const { clientno } = req.params;
     try {
       await ClientService.deleteClient(clientno);
@@ -48,9 +48,89 @@ const ClientController = {
     } catch (error) {
       next(error);
     }
-  },
+  }
 
-  async addOrUpdateClient(req, res, next) {
+  static async createClient(req, res, next) {
+    const {
+      clientno,
+      fname,
+      lname,
+      telno,
+      street,
+      city,
+      email,
+      preftype,
+      maxrent,
+    } = req.body;
+
+    let errors = {};
+    if (!isValidText(fname)) errors.fname = "Invalid first name.";
+    if (!isValidText(lname)) errors.lname = "Invalid last name.";
+    if (!isValidEmail(email)) errors.email = "Invalid email.";
+
+    if (Object.keys(errors).length > 0) {
+      return res.status(422).json({ message: "Validation failed", errors });
+    }
+
+    try {
+      const clientData = {
+        clientno,
+        fname,
+        lname,
+        telno,
+        street,
+        city,
+        email,
+        preftype,
+        maxrent,
+      };
+      await ClientService.createClient(clientData);
+      res.status(201).json({
+        message: "Client created successfully",
+        client: clientData,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async updateClient(req, res, next) {
+    const { clientno } = req.params;
+    const { fname, lname, telno, street, city, email, preftype, maxrent } =
+      req.body;
+
+    let errors = {};
+    if (!isValidText(fname)) errors.fname = "Invalid first name.";
+    if (!isValidText(lname)) errors.lname = "Invalid last name.";
+    if (!isValidEmail(email)) errors.email = "Invalid email.";
+
+    if (Object.keys(errors).length > 0) {
+      return res.status(422).json({ message: "Validation failed", errors });
+    }
+
+    try {
+      const clientData = {
+        clientno,
+        fname,
+        lname,
+        telno,
+        street,
+        city,
+        email,
+        preftype,
+        maxrent,
+      };
+      await ClientService.updateClient(clientno, clientData);
+      res.status(200).json({
+        message: "Client updated successfully",
+        client: clientData,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async addOrUpdateClient(req, res, next) {
     const {
       clientno,
       fname,
@@ -99,7 +179,7 @@ const ClientController = {
     } catch (error) {
       next(error);
     }
-  },
-};
+  }
+}
 
 module.exports = ClientController;

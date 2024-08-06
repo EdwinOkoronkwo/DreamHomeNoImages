@@ -28,8 +28,10 @@ function StaffItem({ staff }) {
       <h1>
         {staff.fname} {staff.lname}
       </h1>
-      <p>Position: {staff.position}</p>
-      <p>Branch No: {staff.branchno}</p>
+      <p>Salary: {staff.salary}</p>
+      <p>Telephone: {staff.telephone}</p>
+      <p>Mobile: {staff.mobile}</p>
+      <p>Email: {staff.email}</p>
       <menu className={classes.actions}>
         <Link to={`/staffs/${staff.staffno}/edit`}>Edit</Link>
         <button onClick={startDeleteHandler}>Delete</button>

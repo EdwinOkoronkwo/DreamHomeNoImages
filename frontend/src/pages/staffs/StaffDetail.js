@@ -99,23 +99,99 @@
 //   return redirect("/staffs");
 // }
 
-import React, { Suspense } from "react";
+// import React, { Suspense } from "react";
+// import { defer, json, redirect, useRouteLoaderData } from "react-router-dom";
+// import StaffItem from "../../components/staffs/StaffItem";
+// import StaffsList from "../../components/staffs/StaffsList";
+// import StaffForm from "../../components/staffs/StaffForm"; // Import StaffForm
+
+// function StaffDetailPage() {
+//   const { staff, staffs } = useRouteLoaderData("staff-detail");
+
+//   return (
+//     <>
+//       <Suspense fallback={<p>Loading staff details...</p>}>
+//         <StaffItem staff={staff} />
+//       </Suspense>
+//       <Suspense fallback={<p>Loading staff list...</p>}>
+//         <StaffsList staffs={staffs} />
+//       </Suspense>
+//     </>
+//   );
+// }
+
+// export default StaffDetailPage;
+
+// export async function loader({ params }) {
+//   const staffno = params.staffno;
+
+//   try {
+//     const staffResponse = await fetch(
+//       `http://localhost:8000/api/staffs/${staffno}`
+//     );
+//     if (!staffResponse.ok) {
+//       throw json(
+//         { message: "Could not fetch staff details." },
+//         { status: 500 }
+//       );
+//     }
+//     const staffData = await staffResponse.json();
+
+//     const staffsResponse = await fetch("http://localhost:8000/api/staffs");
+//     if (!staffsResponse.ok) {
+//       throw json({ message: "Could not fetch staff list." }, { status: 500 });
+//     }
+//     const staffsData = await staffsResponse.json();
+
+//     return defer({
+//       staff: staffData.staff,
+//       staffs: staffsData.staffs,
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     throw json({ message: "Could not fetch staff data." }, { status: 500 });
+//   }
+// }
+
+// export async function action({ params, request }) {
+//   const staffno = params.staffno;
+//   const response = await fetch(`http://localhost:8000/api/staffs/${staffno}`, {
+//     method: request.method,
+//   });
+
+//   if (!response.ok) {
+//     throw json({ message: "Could not delete staff." }, { status: 500 });
+//   }
+
+//   return redirect("/staffs");
+// }
+
+import React, { Suspense, useState } from "react";
 import { defer, json, redirect, useRouteLoaderData } from "react-router-dom";
 import StaffItem from "../../components/staffs/StaffItem";
-import StaffsList from "../../components/staffs/StaffsList";
 import StaffForm from "../../components/staffs/StaffForm"; // Import StaffForm
 
 function StaffDetailPage() {
-  const { staff, staffs } = useRouteLoaderData("staff-detail");
+  const { staff } = useRouteLoaderData("staff-detail");
+  const [isEditMode, setIsEditMode] = useState(false);
+
+  const handleEditModeToggle = () => {
+    setIsEditMode((prevMode) => !prevMode);
+  };
 
   return (
     <>
       <Suspense fallback={<p>Loading staff details...</p>}>
         <StaffItem staff={staff} />
       </Suspense>
-      <Suspense fallback={<p>Loading staff list...</p>}>
-        <StaffsList staffs={staffs} />
-      </Suspense>
+      <button onClick={handleEditModeToggle}>
+        {isEditMode ? "Cancel Edit" : "Edit"}
+      </button>
+      {isEditMode && (
+        <Suspense fallback={<p>Loading staff form...</p>}>
+          <StaffForm staff={staff} isEditMode={isEditMode} />
+        </Suspense>
+      )}
     </>
   );
 }
@@ -137,15 +213,8 @@ export async function loader({ params }) {
     }
     const staffData = await staffResponse.json();
 
-    const staffsResponse = await fetch("http://localhost:8000/api/staffs");
-    if (!staffsResponse.ok) {
-      throw json({ message: "Could not fetch staff list." }, { status: 500 });
-    }
-    const staffsData = await staffsResponse.json();
-
     return defer({
       staff: staffData.staff,
-      staffs: staffsData.staffs,
     });
   } catch (error) {
     console.error(error);

@@ -25,6 +25,20 @@ class BranchService {
     }
   }
 
+  static async getBranchAddressByBranchNo(branchno) {
+    try {
+      const [rows] = await db.query("CALL get_branch_address_fn(?)", [
+        branchno,
+      ]);
+      if (rows.length === 0) {
+        throw new Error(`No branch with branchno ${branchno}`);
+      }
+      return rows[0];
+    } catch (err) {
+      throw err;
+    }
+  }
+
   static async deleteBranch(branchno) {
     try {
       const [result] = await db.query(
@@ -43,7 +57,7 @@ class BranchService {
   static async createBranch(branchData) {
     try {
       const { branchno, street, city, postcode } = branchData;
-      const [result] = await db.query("CALL sp_branch_create(?, ?, ?, ?)", [
+      const [result] = await db.query("CALL new_branch_sp(?, ?, ?, ?)", [
         branchno,
         street,
         city,
@@ -58,13 +72,22 @@ class BranchService {
   static async updateBranch(branchData) {
     try {
       const { branchno, street, city, postcode } = branchData;
-      const [result] = await db.query("CALL sp_branch_update(?, ?, ?, ?)", [
-        branchno,
-        street,
-        city,
-        postcode,
-      ]);
+      const [result] = await db.query(
+        "CALL update_branch_details_sp(?, ?, ?, ?)",
+        [branchno, street, city, postcode]
+      );
       return result;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static async isDuplicateBranchNo(branchno) {
+    try {
+      const query =
+        "SELECT COUNT(*) as count FROM dh_branch WHERE branchno = ?";
+      const [rows] = await db.query(query, [branchno]);
+      return rows[0].count > 0;
     } catch (error) {
       throw error;
     }

@@ -1,69 +1,95 @@
 const db = require("../db");
 
 class ClientService {
-  // Fetch all clients from the database
   static async getAllClients() {
     try {
-      const [rows] = await db.query("SELECT * FROM dh_client");
-      return rows;
-    } catch (err) {
-      console.error("Error fetching all clients:", err);
-      throw err;
+      const [clients] = await db.query("SELECT * FROM dh_client");
+      return clients;
+    } catch (error) {
+      console.error("Error fetching all clients:", error);
+      throw error;
     }
   }
 
-  // Fetch a single client by CLIENTNO
   static async getClientById(clientno) {
     try {
-      const [rows] = await db.query(
-        "SELECT * FROM dh_client WHERE CLIENTNO = ?",
+      const [clients] = await db.query(
+        "SELECT * FROM dh_client WHERE clientno = ?",
         [clientno]
       );
-      if (rows.length === 0) {
-        throw new Error(`No client with CLIENTNO ${clientno}`);
-      }
-      return rows[0];
-    } catch (err) {
-      console.error(`Error fetching client with CLIENTNO ${clientno}:`, err);
-      throw err;
+      return clients[0];
+    } catch (error) {
+      console.error("Error fetching client by ID:", error);
+      throw error;
     }
   }
 
-  // Delete a client by CLIENTNO
+  static async createClient(clientData) {
+    try {
+      const [results] = await db.query(
+        "CALL register_new_client_sp(?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        [
+          clientData.clientno,
+          clientData.fname,
+          clientData.lname,
+          clientData.telno,
+          clientData.street,
+          clientData.city,
+          clientData.email,
+          clientData.preftype,
+          clientData.maxrent,
+        ]
+      );
+      console.log("Stored procedure results:", results);
+    } catch (error) {
+      console.error("Error creating client:", error);
+      throw error;
+    }
+  }
+
+  static async updateClient(clientno, clientData) {
+    try {
+      await db.query("CALL update_client_sp(?, ?, ?, ?, ?, ?, ?, ?, ?)", [
+        clientno,
+        clientData.fname,
+        clientData.lname,
+        clientData.telno,
+        clientData.street,
+        clientData.city,
+        clientData.email,
+        clientData.preftype,
+        clientData.maxrent,
+      ]);
+    } catch (error) {
+      console.error("Error updating client:", error);
+      throw error;
+    }
+  }
+
   static async deleteClient(clientno) {
     try {
-      const [result] = await db.query(
-        "DELETE FROM dh_client WHERE CLIENTNO = ?",
-        [clientno]
-      );
-      if (result.affectedRows === 0) {
-        throw new Error(`No client with CLIENTNO ${clientno} to delete`);
-      }
-      return result;
-    } catch (err) {
-      console.error(`Error deleting client with CLIENTNO ${clientno}:`, err);
-      throw err;
+      await db.query("DELETE FROM dh_client WHERE clientno = ?", [clientno]);
+    } catch (error) {
+      console.error("Error deleting client:", error);
+      throw error;
     }
   }
 
-  // Add or update a client using a stored procedure
   static async addOrUpdateClient(clientData) {
     try {
-      const {
-        clientno,
-        fname,
-        lname,
-        telno,
-        street,
-        city,
-        email,
-        preftype,
-        maxrent,
-      } = clientData;
-
       const [result] = await db.query(
-        "CALL sp_client_add_or_edit(?, ?, ?, ?, ?, ?, ?, ?, ?)",
-        [clientno, fname, lname, telno, street, city, email, preftype, maxrent]
+        "CALL sp_client_add_or_edit(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        [
+          clientData.clientno,
+          clientData.fname,
+          clientData.lname,
+          clientData.telno,
+          clientData.street,
+          clientData.city,
+          clientData.email,
+          clientData.preftype,
+          clientData.maxrent,
+        ]
       );
       return result;
     } catch (error) {

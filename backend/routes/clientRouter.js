@@ -7,7 +7,9 @@ const upload = multer(); // You can pass options if needed
 router.get("/", ClientController.getAllClients);
 router.get("/:clientno", ClientController.getClientById);
 router.delete("/:clientno", ClientController.deleteClient);
-router.post("/", upload.none(), ClientController.addOrUpdateClient);
-router.patch("/:clientno", upload.none(), ClientController.addOrUpdateClient);
+router.post("/", upload.none(), ClientController.createClient);
+router.patch("/:clientno", upload.none(), ClientController.updateClient);
+// router.post("/", upload.none(), ClientController.addOrUpdateClient);
+// router.patch("/:clientno", upload.none(), ClientController.addOrUpdateClient);
 
 module.exports = router;
